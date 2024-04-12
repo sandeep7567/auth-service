@@ -4,8 +4,16 @@
   "description": "A user management service",
   "main": "index.js",
   "scripts": {
-    "dev": "node src/server.js"
+    "dev": "node src/server.js",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write"
+
   },
   "author": "Sandeep T <sandeepthakur7567@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "prettier": "3.2.5",
+    "typescript": "^5.4.5"
+  }
 }
