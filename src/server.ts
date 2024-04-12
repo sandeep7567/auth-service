@@ -1,6 +1,5 @@
-const server = () => {
-    console.log("object server");
-    return true;
+const server = (username: string) => {
+    return username;
 };
 
-server();
+server("4");
