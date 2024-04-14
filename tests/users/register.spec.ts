@@ -100,7 +100,57 @@ describe("POST /auth/register", () => {
             const users = await userRepository.find();
 
             expect(users[0]).toHaveProperty("role");
-            expect(users[0].role).toBe(Roles);
+            expect(users[0].role).toBe(Roles.CUSTOMER);
+        });
+
+        it("should store hashed password in db", async () => {
+            // Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: "test@example.com",
+                password: "test@123",
+                role: "customer",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            //  Assert
+            const userRepository = connection.getRepository(User);
+
+            const users = await userRepository.find();
+
+            expect(users[0].password).not.toBe(userData.password);
+            expect(users[0].password).toHaveLength(60);
+            expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
+        });
+
+        it("should return in email is already exist db", async () => {
+            // Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: "test@example.com",
+                password: "test@123",
+                role: "customer",
+            };
+
+            const userRepository = connection.getRepository(User);
+
+            await userRepository.save(userData);
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            const users = await userRepository.find();
+
+            //  Assert
+            expect(response.statusCode).toBe(400);
+            expect(users).toHaveLength(1);
         });
     });
 

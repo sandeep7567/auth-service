@@ -1,4 +1,9 @@
-import express, { Request, RequestHandler, Response } from "express";
+import express, {
+    NextFunction,
+    Request,
+    RequestHandler,
+    Response,
+} from "express";
 import { AuthCotroller } from "../controllers/AuthController";
 import { UserService } from "./../services/userService";
 import { AppDataSource } from "../config/data-source";
@@ -12,8 +17,12 @@ const userService = new UserService(userRepository);
 
 const authController = new AuthCotroller(userService);
 
-router.post("/register", (async (req: Request, res: Response) => {
-    await authController.register(req, res);
+router.post("/register", (async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    await authController.register(req, res, next);
 }) as RequestHandler);
 
 export default router;
