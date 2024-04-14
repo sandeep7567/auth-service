@@ -1,6 +1,7 @@
 import { NextFunction, Response } from "express";
-import { RegisterUserRequest } from "../types";
+import { validationResult } from "express-validator";
 import { UserService } from "../services/userService";
+import { RegisterUserRequest } from "../types";
 export class AuthCotroller {
     userService: UserService;
 
@@ -11,7 +12,13 @@ export class AuthCotroller {
         req: RegisterUserRequest,
         res: Response,
         next: NextFunction,
-    ): Promise<void> {
+    ) {
+        const result = validationResult(req);
+
+        if (!result.isEmpty()) {
+            return res.status(400).json({ errors: result.array() });
+        }
+
         const { firstName, lastName, email, password } = req.body;
 
         try {

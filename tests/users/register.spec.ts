@@ -81,6 +81,7 @@ describe("POST /auth/register", () => {
         });
 
         it.todo("should return an id of the created user");
+
         it("should return an role of customer when user is created", async () => {
             // Arrange
             const userData = {
@@ -154,5 +155,26 @@ describe("POST /auth/register", () => {
         });
     });
 
-    describe("Fields are missing", () => {});
+    describe("Fields are missing", () => {
+        it("should return 400 status code", async () => {
+            // Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: "",
+                password: "test@123",
+            };
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            //  Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+    });
 });

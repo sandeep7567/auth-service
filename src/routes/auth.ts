@@ -8,6 +8,7 @@ import { AuthCotroller } from "../controllers/AuthController";
 import { UserService } from "./../services/userService";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
+import registerValidator from "../validators/register-validator";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ const userService = new UserService(userRepository);
 
 const authController = new AuthCotroller(userService);
 
-router.post("/register", (async (
+router.post("/register", registerValidator, (async (
     req: Request,
     res: Response,
     next: NextFunction,
