@@ -3,7 +3,7 @@ import request from "supertest";
 import app from "../../src/app";
 import { DataSource } from "typeorm";
 import { User } from "../../src/entity/User";
-import { Roles } from "../../src/config/constants";
+import { Roles } from "../../src/constants";
 
 describe("POST /auth/register", () => {
     let connection: DataSource;
@@ -100,7 +100,7 @@ describe("POST /auth/register", () => {
             const users = await userRepository.find();
 
             expect(users[0]).toHaveProperty("role");
-            expect(users[0].role).toBe(Roles.CUSTOMER);
+            expect(users[0].role).toBe(Roles);
         });
     });
 
