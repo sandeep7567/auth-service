@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
 import { isJwt } from "../utils";
+import { RefreshToken } from "../../src/entity/RefreshToken";
 
 describe("POST /auth/register", () => {
     let connection: DataSource;
@@ -154,6 +155,7 @@ describe("POST /auth/register", () => {
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(1);
         });
+
         it("should return a access and refresh token inside a cookie", async () => {
             // Arrange
             const userData = {
@@ -192,6 +194,35 @@ describe("POST /auth/register", () => {
             expect(refreshToken).not.toBeNull();
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
+        });
+
+        it("should store refreshToken in database", async () => {
+            // Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: "test@example.com",
+                password: "test@123",
+                role: "customer",
+            };
+
+            // Act
+
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            //  Assert
+            const refreshTokenRepo = connection.getRepository(RefreshToken);
+
+            const tokens = await refreshTokenRepo
+                .createQueryBuilder("refreshToken")
+                .where("refreshToken.userId = :userId", {
+                    userId: (response.body as Record<string, string>).id,
+                })
+                .getMany();
+
+            expect(tokens).toHaveLength(1);
         });
     });
 
