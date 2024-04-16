@@ -4,6 +4,7 @@ import app from "../../src/app";
 import { DataSource } from "typeorm";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
+import { isJwt } from "../utils";
 
 describe("POST /auth/register", () => {
     let connection: DataSource;
@@ -153,10 +154,49 @@ describe("POST /auth/register", () => {
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(1);
         });
+        it("should return a access and refresh token inside a cookie", async () => {
+            // Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: "test@example.com",
+                password: "test@123",
+                role: "customer",
+            };
+
+            // Act
+
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            interface Headers {
+                ["set-cookie"]: string[];
+            }
+
+            //  Assert
+            let accessToken: string | null = null;
+            let refreshToken: string | null = null;
+            const cookies = (response.headers as Headers)["set-cookie"] || [];
+
+            cookies.forEach((cookie) => {
+                if (cookie.startsWith("accessToken=")) {
+                    accessToken = cookie.split(";")[0].split("=")[1];
+                }
+                if (cookie.startsWith("refreshToken=")) {
+                    refreshToken = cookie.split(";")[0].split("=")[1];
+                }
+            });
+
+            expect(accessToken).not.toBeNull();
+            expect(refreshToken).not.toBeNull();
+            expect(isJwt(accessToken)).toBeTruthy();
+            expect(isJwt(refreshToken)).toBeTruthy();
+        });
     });
 
     describe("Fields are missing", () => {
-        it("should return 400 status code", async () => {
+        it("should return 400 status code if email is missing", async () => {
             // Arrange
             const userData = {
                 firstName: "John",
@@ -176,5 +216,34 @@ describe("POST /auth/register", () => {
             const users = await userRepository.find();
             expect(users).toHaveLength(0);
         });
+
+        it.todo("should return 400 status code if firstName is missing");
+        it.todo("should return 400 status code if lastName is missing");
+        it.todo("should return 400 status code if password is missing");
+    });
+
+    describe("Fields are not in proper format", () => {
+        it("should trim the email field", async () => {
+            // Arrange
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: " test@123.com ",
+                password: "test@123",
+            };
+
+            // Act
+            await request(app).post("/auth/register").send(userData);
+
+            //  Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            const user = users[0];
+            expect(user.email).toBe("test@123.com");
+        });
+        it.todo("should return 400 status code if email is not valid email");
+        it.todo(
+            "should return 400 status code if password length is less than 8 characters",
+        );
     });
 });
