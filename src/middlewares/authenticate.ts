@@ -11,7 +11,7 @@ export default expressjwt({
         rateLimit: true,
     }) as GetVerificationKey,
     algorithms: ["RS256"],
-    getToken: function getToken(req: Request) {
+    getToken(req: Request) {
         const authHeader = req.headers.authorization;
 
         // Bearer eyjllsdjfljlasdjfljlsadjfljlsdf

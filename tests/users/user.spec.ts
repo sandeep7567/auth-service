@@ -106,6 +106,26 @@ describe("GET /auth/self", () => {
                 "password",
             );
         });
+        it("should return 401 statusCode if token was not send", async () => {
+            // Register user
+            const userData = {
+                firstName: "John",
+                lastName: "Smith",
+                email: "test@example.com",
+                password: "test@123",
+            };
+
+            const userRepository = connection.getRepository(User);
+            await userRepository.save({
+                ...userData,
+                role: Roles.CUSTOMER,
+            });
+
+            const response = await request(app).get("/auth/self").send();
+
+            //  Assert
+            expect(response.statusCode).toBe(401);
+        });
     });
 
     describe("Fields are missing", () => {});
