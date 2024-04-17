@@ -14,6 +14,8 @@ import { TokenService } from "../services/tokenService";
 import { RefreshToken } from "../entity/RefreshToken";
 import loginValidator from "../validators/login-validator";
 import { CredentialService } from "../services/credentialService";
+import authenticate from "../middlewares/authenticate";
+import { AuthRequest } from "../types";
 
 const router = express.Router();
 
@@ -47,5 +49,15 @@ router.post("/login", loginValidator, (async (
 ) => {
     await authController.login(req, res, next);
 }) as RequestHandler);
+
+router.get(
+    "/self",
+    authenticate as RequestHandler,
+    (req: Request, res: Response) =>
+        authController.self(
+            req as AuthRequest,
+            res,
+        ) as unknown as RequestHandler,
+);
 
 export default router;

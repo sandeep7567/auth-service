@@ -4,7 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { Logger } from "winston";
 import { TokenService } from "../services/tokenService";
 import { UserService } from "../services/userService";
-import { RegisterUserRequest } from "../types";
+import { AuthRequest, RegisterUserRequest } from "../types";
 import createHttpError from "http-errors";
 import { CredentialService } from "../services/credentialService";
 
@@ -85,6 +85,7 @@ export class AuthCotroller {
             return;
         }
     }
+
     async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
         const result = validationResult(req);
 
@@ -163,5 +164,10 @@ export class AuthCotroller {
             next(err);
             return;
         }
+    }
+
+    async self(req: AuthRequest, res: Response) {
+        const user = await this.userService.findById(Number(req.auth.sub));
+        res.json({ ...user, password: undefined });
     }
 }
