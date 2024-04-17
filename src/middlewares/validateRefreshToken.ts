@@ -23,6 +23,7 @@ export default expressjwt({
                 },
             });
 
+            // if true, then refresh token is revoked, otherwise refresh token is not revoked , and user have means return true;
             return refreshToken === null;
         } catch (err) {
             logger.error("Error while getting refresh token", {
