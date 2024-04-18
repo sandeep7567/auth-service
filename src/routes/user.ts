@@ -52,4 +52,13 @@ router.get(
     }) as RequestHandler,
 );
 
+router.get(
+    "/:id",
+    authenticate as RequestHandler,
+    canAccess([Roles.ADMIN]) as RequestHandler,
+    (async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
+        await userController.getOne(req, res, next);
+    }) as RequestHandler,
+);
+
 export default router;
