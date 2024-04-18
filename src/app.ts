@@ -2,8 +2,10 @@ import "reflect-metadata";
 
 import express, { Request, Response } from "express";
 import { globalErrorHandler } from "./common/middlewares/globalErrorHandler";
-import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
+
+import authRouter from "./routes/auth";
+import tenantRouter from "./routes/tenant";
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/tenants", tenantRouter);
 
 app.use(globalErrorHandler);
 
