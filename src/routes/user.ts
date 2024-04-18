@@ -1,4 +1,9 @@
-import express, { NextFunction, RequestHandler, Response } from "express";
+import express, {
+    NextFunction,
+    Request,
+    RequestHandler,
+    Response,
+} from "express";
 
 import authenticate from "../middlewares/authenticate";
 import { canAccess } from "../middlewares/canAccess";
@@ -47,7 +52,7 @@ router.get(
     "/",
     authenticate as RequestHandler,
     canAccess([Roles.ADMIN]) as RequestHandler,
-    (async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
+    (async (req: Request, res: Response, next: NextFunction) => {
         await userController.getAll(req, res, next);
     }) as RequestHandler,
 );
@@ -56,7 +61,7 @@ router.get(
     "/:id",
     authenticate as RequestHandler,
     canAccess([Roles.ADMIN]) as RequestHandler,
-    (async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
+    (async (req: Request, res: Response, next: NextFunction) => {
         await userController.getOne(req, res, next);
     }) as RequestHandler,
 );
@@ -65,7 +70,7 @@ router.delete(
     "/:id",
     authenticate as RequestHandler,
     canAccess([Roles.ADMIN]) as RequestHandler,
-    (async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
+    (async (req: Request, res: Response, next: NextFunction) => {
         await userController.destroy(req, res, next);
     }) as RequestHandler,
 );
