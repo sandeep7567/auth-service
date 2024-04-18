@@ -1,4 +1,9 @@
-import express, { NextFunction, RequestHandler, Response } from "express";
+import express, {
+    NextFunction,
+    Request,
+    RequestHandler,
+    Response,
+} from "express";
 import { TenantController } from "../controllers/TenantController";
 import { TenantService } from "../services/tenantService";
 import { AppDataSource } from "../config/data-source";
@@ -36,19 +41,11 @@ router.patch(
     }) as RequestHandler,
 );
 
-router.get("/", (async (
-    req: CreateTenantRequest,
-    res: Response,
-    next: NextFunction,
-) => {
+router.get("/", (async (req: Request, res: Response, next: NextFunction) => {
     await tenantController.getAll(req, res, next);
 }) as RequestHandler);
 
-router.get("/:id", (async (
-    req: CreateTenantRequest,
-    res: Response,
-    next: NextFunction,
-) => {
+router.get("/:id", (async (req: Request, res: Response, next: NextFunction) => {
     await tenantController.getOne(req, res, next);
 }) as RequestHandler);
 
@@ -56,7 +53,7 @@ router.delete(
     "/:id",
     authenticate as RequestHandler,
     canAccess([Roles.ADMIN]) as RequestHandler,
-    (async (req: CreateTenantRequest, res: Response, next: NextFunction) => {
+    (async (req: Request, res: Response, next: NextFunction) => {
         await tenantController.destroy(req, res, next);
     }) as RequestHandler,
 );
