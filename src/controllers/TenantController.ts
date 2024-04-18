@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { TenantService } from "../services/tenantService";
 import { CreateTenantRequest } from "../types";
 import createHttpError from "http-errors";
+import { validationResult } from "express-validator";
 
 export class TenantController {
     constructor(
@@ -11,6 +12,12 @@ export class TenantController {
     ) {}
 
     async create(req: CreateTenantRequest, res: Response, next: NextFunction) {
+        // Validation
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({ errors: result.array() });
+        }
+
         const { name, address } = req.body;
         this.logger.debug(`Request for creating tenant`, req.body);
         try {
@@ -26,6 +33,12 @@ export class TenantController {
     }
 
     async update(req: CreateTenantRequest, res: Response, next: NextFunction) {
+        // Validation
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({ errors: result.array() });
+        }
+
         const { name, address } = req.body;
         const tenantId = req.params.id;
         if (isNaN(Number(tenantId))) {
