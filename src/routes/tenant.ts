@@ -33,4 +33,12 @@ router.patch(
     }) as RequestHandler,
 );
 
+router.get("/", (async (
+    req: CreateTenantRequest,
+    res: Response,
+    next: NextFunction,
+) => {
+    await tenantController.getAll(req, res, next);
+}) as RequestHandler);
+
 export default router;
