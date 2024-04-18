@@ -41,4 +41,12 @@ router.get("/", (async (
     await tenantController.getAll(req, res, next);
 }) as RequestHandler);
 
+router.get("/:id", (async (
+    req: CreateTenantRequest,
+    res: Response,
+    next: NextFunction,
+) => {
+    await tenantController.getOne(req, res, next);
+}) as RequestHandler);
+
 export default router;
