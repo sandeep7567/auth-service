@@ -1,4 +1,3 @@
-import { Roles } from "./../constants";
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/userService";
 import { CreateUserRequest, UpdateUserRequest } from "../types";
@@ -12,14 +11,16 @@ export class UserController {
     ) {}
 
     async create(req: CreateUserRequest, res: Response, next: NextFunction) {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password, tenantId, role } =
+            req.body;
         try {
             const user = await this.userService.create({
                 email,
                 firstName,
                 lastName,
                 password,
-                role: Roles.MANAGER,
+                role,
+                tenantId,
             });
 
             res.status(201).json({ id: user.id });
