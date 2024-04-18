@@ -7,6 +7,7 @@ import { UserService } from "../services/userService";
 import { AuthRequest, RegisterUserRequest } from "../types";
 import createHttpError from "http-errors";
 import { CredentialService } from "../services/credentialService";
+import { Roles } from "../constants";
 
 export class AuthCotroller {
     // userService: UserService;
@@ -43,6 +44,7 @@ export class AuthCotroller {
                 lastName,
                 email,
                 password,
+                role: Roles.CUSTOMER,
             });
 
             const payload: JwtPayload = {
