@@ -44,7 +44,7 @@ router.patch(
 );
 
 router.get(
-    "/:id",
+    "/",
     authenticate as RequestHandler,
     canAccess([Roles.ADMIN]) as RequestHandler,
     (async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
