@@ -31,7 +31,7 @@ const userController = new UserController(userService, logger);
 router.post(
     "/",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     createUserValidator,
     (async (req: CreateUserRequest, res: Response, next: NextFunction) => {
         await userController.create(req, res, next);
@@ -41,7 +41,7 @@ router.post(
 router.patch(
     "/:id",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     updateUserValidator,
     (async (req: UpdateUserRequest, res: Response, next: NextFunction) => {
         await userController.update(req, res, next);
@@ -51,7 +51,7 @@ router.patch(
 router.get(
     "/",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     (async (req: Request, res: Response, next: NextFunction) => {
         await userController.getAll(req, res, next);
     }) as RequestHandler,
@@ -60,7 +60,7 @@ router.get(
 router.get(
     "/:id",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     (async (req: Request, res: Response, next: NextFunction) => {
         await userController.getOne(req, res, next);
     }) as RequestHandler,
@@ -69,7 +69,7 @@ router.get(
 router.delete(
     "/:id",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     (async (req: Request, res: Response, next: NextFunction) => {
         await userController.destroy(req, res, next);
     }) as RequestHandler,

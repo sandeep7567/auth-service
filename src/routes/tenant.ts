@@ -24,7 +24,7 @@ const tenantController = new TenantController(tenantService, logger);
 router.post(
     "/",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     tenantValidator,
     (async (req: CreateTenantRequest, res: Response, next: NextFunction) => {
         await tenantController.create(req, res, next);
@@ -34,7 +34,7 @@ router.post(
 router.patch(
     "/:id",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     tenantValidator,
     (async (req: CreateTenantRequest, res: Response, next: NextFunction) => {
         await tenantController.update(req, res, next);
@@ -45,14 +45,19 @@ router.get("/", (async (req: Request, res: Response, next: NextFunction) => {
     await tenantController.getAll(req, res, next);
 }) as RequestHandler);
 
-router.get("/:id", (async (req: Request, res: Response, next: NextFunction) => {
-    await tenantController.getOne(req, res, next);
-}) as RequestHandler);
+router.get(
+    "/:id",
+    authenticate as RequestHandler,
+    canAccess([Roles.ADMIN]),
+    (async (req: Request, res: Response, next: NextFunction) => {
+        await tenantController.getOne(req, res, next);
+    }) as RequestHandler,
+);
 
 router.delete(
     "/:id",
     authenticate as RequestHandler,
-    canAccess([Roles.ADMIN]) as RequestHandler,
+    canAccess([Roles.ADMIN]),
     (async (req: Request, res: Response, next: NextFunction) => {
         await tenantController.destroy(req, res, next);
     }) as RequestHandler,
