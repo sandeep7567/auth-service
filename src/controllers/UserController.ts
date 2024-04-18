@@ -1,7 +1,7 @@
 import { Roles } from "./../constants";
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/userService";
-import { CreateUserRequest } from "../types";
+import { CreateUserRequest, UpdateUserRequest } from "../types";
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
 import { Logger } from "winston";
@@ -28,7 +28,7 @@ export class UserController {
         }
     }
 
-    async update(req: Request, res: Response, next: NextFunction) {
+    async update(req: UpdateUserRequest, res: Response, next: NextFunction) {
         // Validation
         const result = validationResult(req);
         if (!result.isEmpty()) {
