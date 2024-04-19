@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import express, { Request, Response } from "express";
-import { globalErrorHandler } from "./common/middlewares/globalErrorHandler";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import cookieParser from "cookie-parser";
 
 import authRouter from "./routes/auth";
