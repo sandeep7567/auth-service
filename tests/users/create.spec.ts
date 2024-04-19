@@ -34,7 +34,9 @@ describe("POST /users", () => {
 
     describe("Given all fields", () => {
         it("should persist the user in the database", async () => {
+            // Create tenant first
             const tenant = await createTenant(connection.getRepository(Tenant));
+
             const adminToken = jwks.token({
                 sub: "1",
                 role: Roles.ADMIN,
@@ -66,6 +68,7 @@ describe("POST /users", () => {
         it("should create a manager user", async () => {
             // Create tenant
             const tenant = await createTenant(connection.getRepository(Tenant));
+
             const adminToken = jwks.token({
                 sub: "1",
                 role: Roles.ADMIN,
@@ -86,7 +89,6 @@ describe("POST /users", () => {
                 .post("/users")
                 .set("Cookie", [`accessToken=${adminToken}`])
                 .send(userData);
-
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
 
